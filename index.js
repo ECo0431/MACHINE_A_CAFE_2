@@ -101,7 +101,7 @@ for (let i = 0; i < ALLCAFE.length; i++) {
           ECRAN.innerHTML = `
             <p>Reste à payer ${round(PRIXAPAYER)}€</p>
           `;
-
+          console.log(PRIXAPAYER);
           if (round(PRIXAPAYER) == 0 || PRIXAPAYER < 0) {
             cafeEnCours();
             const REMBOURSEMENT = setTimeout(remboursement, 4000);
@@ -139,7 +139,7 @@ function remboursement() {
   ) {
     SONREMBOURSEMENTUNEPIECE.play();
     PIECEREMBOURSEMENT1.classList.remove("none");
-  } else if (remboursementPieces == 0) {
+  } else if (round(remboursementPieces) == 0) {
   } else {
     SONREMBOURSEMENT.play();
     PIECEREMBOURSEMENT1.classList.remove("none");
