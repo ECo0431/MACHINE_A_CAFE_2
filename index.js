@@ -156,3 +156,4 @@ CAFE.addEventListener("click", () => {
   CAFE.classList.add("none");
   CAFELIQUIDE.classList.add("none");
 });
+//Test pour github
