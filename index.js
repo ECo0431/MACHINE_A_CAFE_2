@@ -102,7 +102,7 @@ for (let i = 0; i < ALLCAFE.length; i++) {
             <p>Reste à payer ${round(PRIXAPAYER)}€</p>
           `;
 
-          if (PRIXAPAYER == 0 || PRIXAPAYER < 0) {
+          if (round(PRIXAPAYER) == 0 || PRIXAPAYER < 0) {
             cafeEnCours();
             const REMBOURSEMENT = setTimeout(remboursement, 4000);
             SONCAFEENCOURS.play();
@@ -156,4 +156,3 @@ CAFE.addEventListener("click", () => {
   CAFE.classList.add("none");
   CAFELIQUIDE.classList.add("none");
 });
-//Test pour github
