@@ -9,6 +9,8 @@ body {
   justify-content: center;
   flex-direction: column;
   padding: 20px;
+  background: linear-gradient(#f2f1dd, white);
+  height: 100vh;
 }
 
 .ok {

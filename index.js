@@ -1,27 +1,67 @@
-const BOUTONEXPRESSO = document.querySelector("#bouton-expresso");
-const BOUTONALLONGEE = document.querySelector("#bouton-allongee");
-const BOUTONCAPPUCCINO = document.querySelector("#bouton-cappuccino");
-const BOUTONNOISETTE = document.querySelector("#bouton-noisette");
-const BOUTONTHE = document.querySelector("#bouton-the");
-const BOUTONPOTAGE = document.querySelector("#bouton-potage");
-const ECRAN = document.querySelector("#ecran");
-const PRIXCAFE = [1.1, 1.2, 1.4, 1.3, 1.2, 1];
-const ALLCAFE = [
-  BOUTONEXPRESSO,
-  BOUTONALLONGEE,
-  BOUTONCAPPUCCINO,
-  BOUTONNOISETTE,
-  BOUTONTHE,
-  BOUTONPOTAGE,
-];
-const NOMCAFE = [
+//MENU BOISSSONS
+const NOMBOISSONS = [
   "Expresso",
-  "Allongée",
-  "Cappucino",
+  "Allongé",
+  "Cappuccino",
   "Noisette",
   "Thé",
   "Potage",
 ];
+const BTNEXPRESSO = document.querySelector("#bouton-expresso");
+const BTNALLONGE = document.querySelector("#bouton-allonge");
+const BTNCAPPUCCINO = document.querySelector("#bouton-cappuccino");
+const BTNNOISETTE = document.querySelector("#bouton-noisette");
+const BTNTHE = document.querySelector("#bouton-the");
+const BTNPOTAGE = document.querySelector("#bouton-potage");
+const ALLBTNBOISSONS = [
+  BTNEXPRESSO,
+  BTNALLONGE,
+  BTNCAPPUCCINO,
+  BTNNOISETTE,
+  BTNTHE,
+  BTNPOTAGE,
+];
+const PRIXBOISSONS = [1.1, 1.3, 1.5, 1.4, 1.2, 1];
+
+//MENU PIECES
+const VALEURSPIECES = [2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01];
+const BTNDEUXEUROS = document.querySelector("#deux-euros");
+const BTNUNEURO = document.querySelector("#un-euro");
+const BTNCINQUANTECENTIMES = document.querySelector("#cinquante-centimes");
+const BTNVINGTSCENTIMES = document.querySelector("#vingts-centimes");
+const BTNDIXCENTIMES = document.querySelector("#dix-centimes");
+const BTNCINQUECENTIMES = document.querySelector("#cinque-centimes");
+const BTNDEUXCENTIMES = document.querySelector("#deux-centimes");
+const BTNUNCENTIME = document.querySelector("#un-centime");
+const ALLBTNPIECES = [
+  BTNDEUXEUROS,
+  BTNUNEURO,
+  BTNCINQUANTECENTIMES,
+  BTNVINGTSCENTIMES,
+  BTNDIXCENTIMES,
+  BTNCINQUECENTIMES,
+  BTNDEUXCENTIMES,
+  BTNUNCENTIME,
+];
+// Variables Fonctions
+let prixBoisson = 0;
+let valeurPiece = 0;
+let total = 0;
+let totaux = 0;
+// Ecran Machine à café
+const ECRAN = document.querySelector("#ecran");
+// Café avec animation
+const CAFE = document.querySelector("#cafe");
+const CAFELIQUIDE = document.querySelector("#cafe-liquide");
+//Remboursement
+const PIECEREMBOURSEMENT1 = document.querySelector("#piece-remboursement-1");
+const PIECEREMBOURSEMENT2 = document.querySelector("#piece-remboursement-2");
+// Fonction qui arrondi
+function round(num) {
+  var m = Number((Math.abs(num) * 100).toPrecision(15));
+  return (Math.round(m) / 100) * Math.sign(num);
+}
+// BRUITAGES
 const SONCLICBOUTON = new Audio("./son/clic_bouton.mp3");
 SONCLICBOUTON.loop = false;
 SONCLICBOUTON.playbackRate = 1;
@@ -34,116 +74,93 @@ SONCAFEENCOURS.playbackRate = 1;
 const SONREMBOURSEMENT = new Audio("./son/remboursement_pieces.mp3");
 SONREMBOURSEMENT.loop = false;
 SONREMBOURSEMENT.playbackRate = 1;
-const BOIRE = new Audio("./son/boire.wav");
-BOIRE.loop = false;
-BOIRE.playbackRate = 1;
 const SONREMBOURSEMENTUNEPIECE = new Audio("./son/remboursement_une_piece.mp3");
 SONREMBOURSEMENTUNEPIECE.loop = false;
 SONREMBOURSEMENTUNEPIECE.playbackRate = 1;
-let PRIXAPAYER = 0;
-const DEUXEUROS = document.querySelector("#deux-euros");
-const UNEURO = document.querySelector("#un-euro");
-const CINQUANTECENTIMES = document.querySelector("#cinquante-centimes");
-const VINGTSCENTIMES = document.querySelector("#vingts-centimes");
-const DIXCENTIMES = document.querySelector("#dix-centimes");
-const CINQUECENTIMES = document.querySelector("#cinque-centimes");
-const DEUXCENTIMES = document.querySelector("#deux-centimes");
-const UNCENTIME = document.querySelector("#un-centime");
-const PIECES = [
-  DEUXEUROS,
-  UNEURO,
-  CINQUANTECENTIMES,
-  VINGTSCENTIMES,
-  DIXCENTIMES,
-  CINQUECENTIMES,
-];
-const VALEURSPIECES = [2, 1, 0.5, 0.2, 0.1, 0.05];
-let PIECESINSERE;
-const CAFE = document.querySelector("#cafe");
-const CAFELIQUIDE = document.querySelector("#cafe-liquide");
-let programmeChoisi = false;
-const PIECESNOK = [DEUXCENTIMES, UNCENTIME];
-const PIECEREMBOURSEMENT1 = document.querySelector("#piece-remboursement-1");
-const PIECEREMBOURSEMENT2 = document.querySelector("#piece-remboursement-2");
-
-PIECESNOK[0].addEventListener("click", () => {
-  ECRAN.innerHTML = `
-  <p>Pièce refusée</p>
-`;
-});
-PIECESNOK[1].addEventListener("click", () => {
-  ECRAN.innerHTML = `
-  <p>Pièce refusée</p>
-`;
-});
-
-function round(num) {
-  var m = Number((Math.abs(num) * 100).toPrecision(15));
-  return (Math.round(m) / 100) * Math.sign(num);
-}
-
-for (let i = 0; i < ALLCAFE.length; i++) {
-  ALLCAFE[i].addEventListener("click", () => {
-    ECRAN.innerHTML = `
-      <p>${NOMCAFE[i]}<br> Veuillez inséré ${PRIXCAFE[i]}€</p>
+const SONBOIRE = new Audio("./son/boire.wav");
+SONBOIRE.loop = false;
+SONBOIRE.playbackRate = 1;
+//Fonction Choix de la boisson retourne le prix de la boisson choisi
+function choixBoisson() {
+  for (let i = 0; i < ALLBTNBOISSONS.length; i++) {
+    ALLBTNBOISSONS[i].addEventListener("click", () => {
+      SONCLICBOUTON.play();
+      prixBoisson = PRIXBOISSONS[i];
+      console.log("Prix boisson " + prixBoisson);
+      ECRAN.innerHTML = `
+      <p>${NOMBOISSONS[i]} à ${prixBoisson} €</p>
     `;
-    programmeChoisi = true;
-    PRIXAPAYER = PRIXCAFE[i];
-    SONCLICBOUTON.play();
+      calculPiecesInsere(prixBoisson, valeurPiece);
+    });
+  }
+  return prixBoisson;
+}
 
-    if (programmeChoisi == true) {
-      for (let i = 0; i < VALEURSPIECES.length; i++) {
-        PIECES[i].addEventListener("click", () => {
-          console.log(PIECESINSERE);
-          PIECESINSERE = VALEURSPIECES[i];
-          SONINSEREPIECE.play();
-          PRIXAPAYER -= PIECESINSERE;
-          ECRAN.innerHTML = `
-            <p>Reste à payer ${round(PRIXAPAYER)}€</p>
-          `;
-          console.log(PRIXAPAYER);
-          if (round(PRIXAPAYER) == 0 || PRIXAPAYER < 0) {
-            cafeEnCours();
-            const REMBOURSEMENT = setTimeout(remboursement, 4000);
-            SONCAFEENCOURS.play();
-            CAFELIQUIDE.classList.remove("none");
-            CAFE.classList.remove("none");
-          }
-        });
+choixBoisson();
+//Fonction Choix de la pièce retourne la valeur de la pièce choisi
+function choixPieces() {
+  for (let i = 0; i < ALLBTNPIECES.length; i++) {
+    ALLBTNPIECES[i].addEventListener("click", () => {
+      SONINSEREPIECE.play();
+      valeurPiece = VALEURSPIECES[i];
+      console.log("Pièce choisi " + valeurPiece);
+      calculPiecesInsere(prixBoisson, valeurPiece);
+    });
+  }
+  return valeurPiece;
+}
+
+choixPieces();
+//Fonction calcul retour pièces prend en argument la valeur de la pièce et le prix de la boisson retourne le prix de la boisson - la valeur de la pièce
+function calculPiecesInsere() {
+  total = valeurPiece;
+  totaux = total + totaux;
+  prixBoisson -= total;
+  console.log("Total " + total);
+  console.log("Totaux " + totaux);
+  console.log("Prix boisson moins pièce inseré " + round(prixBoisson));
+  if (round(prixBoisson) == 0 || round(prixBoisson) < 0) {
+    animCafeEnCours();
+    setTimeout(affichageRemboursement, 5000);
+    //Function qui affiche le remboursement selon certaines conditions
+    function affichageRemboursement() {
+      if (
+        round(prixBoisson) == -2 ||
+        round(prixBoisson) == -1 ||
+        round(prixBoisson) == -0.5 ||
+        round(prixBoisson) == -0.2 ||
+        round(prixBoisson) == -0.1 ||
+        round(prixBoisson) == -0.05 ||
+        round(prixBoisson) == -0.02
+      ) {
+        SONREMBOURSEMENTUNEPIECE.play();
+        PIECEREMBOURSEMENT1.classList.remove("none");
+      } else if (round(prixBoisson) == 0) {
+      } else {
+        SONREMBOURSEMENT.play();
+        PIECEREMBOURSEMENT1.classList.remove("none");
+        PIECEREMBOURSEMENT2.classList.remove("none");
       }
+      ECRAN.innerHTML = `
+      <p>Remboursement de ${Math.abs(round(prixBoisson))}€</p>
+      `;
     }
-  });
+  } else {
+    ECRAN.innerHTML = `
+    <p>Reste à payer ${round(prixBoisson)}€</p>
+    `;
+  }
+  return totaux;
 }
 
-function cafeEnCours() {
-  ECRAN.innerHTML = `
-  <p>Boisson en cours</p>
-`;
-}
-function buvez() {
-  ECRAN.innerHTML = `
-  <p>Buvez vôtre boisson</p>
-`;
-}
-function remboursement() {
-  let remboursementPieces = PRIXAPAYER - PRIXAPAYER - PRIXAPAYER;
-  ECRAN.innerHTML = `
-  <p>Remboursement de ${round(remboursementPieces)}€</p>
-`;
-  const BUVEZ = setTimeout(buvez, 4000);
-  if (
-    round(remboursementPieces) == 1 ||
-    round(remboursementPieces) == 0.5 ||
-    round(remboursementPieces) == 0.2 ||
-    round(remboursementPieces) == 0.1
-  ) {
-    SONREMBOURSEMENTUNEPIECE.play();
-    PIECEREMBOURSEMENT1.classList.remove("none");
-  } else if (round(remboursementPieces) == 0) {
-  } else {
-    SONREMBOURSEMENT.play();
-    PIECEREMBOURSEMENT1.classList.remove("none");
-    PIECEREMBOURSEMENT2.classList.remove("none");
+function animCafeEnCours() {
+  if (round(prixBoisson) == 0 || prixBoisson < 0) {
+    SONCAFEENCOURS.play();
+    CAFELIQUIDE.classList.remove("none");
+    CAFE.classList.remove("none");
+    ECRAN.innerHTML = `
+    <p>Boisson en cours</p>
+    `;
   }
 }
 
@@ -152,7 +169,7 @@ CAFE.addEventListener("click", () => {
   function rechargePage() {
     location.reload();
   }
-  BOIRE.play();
+  SONBOIRE.play();
   CAFE.classList.add("none");
   CAFELIQUIDE.classList.add("none");
 });
